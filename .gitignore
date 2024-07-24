@@ -1,0 +1,7 @@
+# IDE files
+.vs/
+
+# Build files
+bin/
+obj/
+build/
