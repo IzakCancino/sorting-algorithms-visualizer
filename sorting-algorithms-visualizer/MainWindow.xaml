@@ -5,26 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:sorting_algorithms_visualizer"
         mc:Ignorable="d"
-        Title="Sorting Algorithms Viewer" Height="450" Width="800">
+        Title="Sorting Algorithms Viewer" Height="450" Width="800" Background="White">
     <Grid x:Name="RootGrid" Tag="Location">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="28" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <GridSplitter Grid.Column="0" Grid.RowSpan="1" Width="3"  HorizontalAlignment="Left" Background="#B6B6B6" Margin="297,0,0,0" />
-        <GridSplitter x:Name="GridSplitterConsole" Grid.Row="0" Grid.ColumnSpan="2" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#B6B6B6" DragCompleted="GridSplitterConsole_DragCompleted" Tag="0" />
-
-        
-        <!--Console tab-->
-        <TabControl Grid.ColumnSpan="2" Grid.Row="1">
-            <TabItem x:Name="TabItemConsole" Header="Console" MouseDoubleClick="TabItemConsole_MouseDoubleClick">
+        <!--Left controls panel-->
+        <TabControl Grid.Row="0" Grid.Column="0">
+            <!--Configuration tab-->
+            <TabItem Header="Configuration">
+                <Grid>
+                    <Button x:Name="BtnPlay" Content="Play" HorizontalAlignment="Left" Margin="88,115,0,0" VerticalAlignment="Top" Height="26" Width="96"/>
+                </Grid>
+            </TabItem>
+            
+            <!-- Log tab-->
+            <TabItem Header="Log">
                 <Grid Background="#000000">
-                    <RichTextBox Background="Black" Foreground="White" SelectionBrush="#FF57CCFA" SelectionTextBrush="Black" FontFamily="Consolas" VerticalScrollBarVisibility="Visible">
+                    <RichTextBox x:Name="TextLog" Background="Black" Foreground="White" SelectionBrush="#FF57CCFA" SelectionTextBrush="Black" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" IsReadOnly="True">
                         <RichTextBox.Resources>
                             <Style TargetType="{x:Type Paragraph}">
                                 <Setter Property="Margin" Value="0"/>
@@ -33,7 +36,7 @@
 
                         <FlowDocument>
                             <Paragraph>
-                                <Run Text=" ----- Sorting Algorithms Visualizer (Console) ----- "/>
+                                <Run Text=" == Sorting Algorithms Visualizer (Log) == "/>
                             </Paragraph>
                         </FlowDocument>
                     </RichTextBox>
@@ -41,9 +44,12 @@
             </TabItem>
         </TabControl>
 
+        <!--Control to move the column size-->
+        <GridSplitter x:Name="GridSplitterPanel" Grid.Column="1" Grid.RowSpan="1" Width="3"  HorizontalAlignment="Left" Background="#B6B6B6" Margin="0,0,0,0" Tag="0" MouseDoubleClick="GridSplitterPanel_MouseDoubleClick" DragCompleted="GridSplitterPanel_DragCompleted"/>
 
-
-
-
+        <!--Main graphic canvas-->
+        <Canvas x:Name="CanvasGraph" Grid.Row="0" Grid.Column="1" Background="#FFD61717" Margin="3,0,0,0">
+            <Rectangle Fill="Blue" Canvas.Top="102" Canvas.Left="90" Height="100" Width="100"></Rectangle>
+        </Canvas>
     </Grid>
 </Window>

@@ -21,38 +21,17 @@ namespace sorting_algorithms_visualizer
             InitializeComponent();
         }
 
-        private void GridSplitterConsole_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        private void GridSplitterPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            int verticalLocation = Convert.ToInt32(GridSplitterConsole.Tag.ToString());
-            int newVerticalLocation = verticalLocation + (int)e.VerticalChange;
-
-            if (newVerticalLocation > 0)
-            {
-                // Console tab too closed
-                RootGrid.RowDefinitions[1].Height = new GridLength(28);
-                GridSplitterConsole.Tag = 0;
-                return;
-            }
-
-            GridSplitterConsole.Tag = newVerticalLocation;
+            // Move the splitter to its default location
+            RootGrid.ColumnDefinitions[0].Width = new GridLength(300);
         }
 
-        private void TabItemConsole_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void GridSplitterPanel_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            int verticalLocation = Convert.ToInt32(GridSplitterConsole.Tag.ToString());
-
-            if (verticalLocation >= 0)
-            {
-                // Show the Console tab
-                RootGrid.RowDefinitions[1].Height = new GridLength(120);
-                GridSplitterConsole.Tag = -92;
-            }
-            else if (verticalLocation < 0)
-            {
-                // Hide the Console tab
-                RootGrid.RowDefinitions[1].Height = new GridLength(28);
-                GridSplitterConsole.Tag = 0;
-            }
+            // Save in a tag the horizontal location of the splitter
+            int horizontalLocation = Convert.ToInt32(GridSplitterPanel.Tag.ToString());
+            GridSplitterPanel.Tag = horizontalLocation + (int)e.HorizontalChange;
         }
     }
 }
