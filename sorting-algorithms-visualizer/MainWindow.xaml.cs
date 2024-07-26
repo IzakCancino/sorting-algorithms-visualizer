@@ -24,20 +24,6 @@ namespace sorting_algorithms_visualizer
             InitializeComponent();
         }
 
-        //public void PrintLog(string message, bool? succesful = null)
-        //{
-        //    Paragraph p = new Paragraph();
-        //    p.Inlines.Add(message);
-
-        //    if (succesful == null) { }
-        //    else if (succesful)
-        //    {
-        //        p.Foreground = Brushes.Green;
-        //    }
-
-        //    TextLog.Document.Blocks.Add(p);
-        //}
-
         private void GridSplitterPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Move the splitter to its default location
@@ -111,6 +97,7 @@ namespace sorting_algorithms_visualizer
 
         private void InputNums_TextChanged(object sender, TextChangedEventArgs e)
         {
+            // Validation of "values to sort" input. It must be an integer greater or equal than 2
             var value = InputNums.Text;
 
             if (value != null && int.TryParse(value, out int num) && num >= 2)
