@@ -24,6 +24,20 @@ namespace sorting_algorithms_visualizer
             InitializeComponent();
         }
 
+        //public void PrintLog(string message, bool? succesful = null)
+        //{
+        //    Paragraph p = new Paragraph();
+        //    p.Inlines.Add(message);
+
+        //    if (succesful == null) { }
+        //    else if (succesful)
+        //    {
+        //        p.Foreground = Brushes.Green;
+        //    }
+
+        //    TextLog.Document.Blocks.Add(p);
+        //}
+
         private void GridSplitterPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Move the splitter to its default location
@@ -39,12 +53,14 @@ namespace sorting_algorithms_visualizer
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
+            Log.PrintAlert(TextLog, "Starting population process...");
+
             // Restart the canvas
             CanvasGraph.Children.Clear();
 
             // Variables used
             Random rand = new Random();
-            int NUMS_USED = rand.Next(2, 100);
+            int amountOfValues = Convert.ToInt32(InputNums.Text);
             System.Windows.Shapes.Rectangle[] rectangles = {};
 
             // Absolute dimensions of the canva
@@ -52,8 +68,8 @@ namespace sorting_algorithms_visualizer
             double totalHeight = CanvasGraph.ActualHeight;
             double widthMargin = totalWidth * 0.05;
             double heightMargin = totalHeight * 0.05;
-            double widthOfEachRectangle = (totalWidth - (widthMargin * 4)) / ((NUMS_USED * 2) - 1);
-            double heightOfEachRectangle = (totalHeight - heightMargin * 4) / NUMS_USED;
+            double widthOfEachRectangle = (totalWidth - (widthMargin * 4)) / ((amountOfValues * 2) - 1);
+            double heightOfEachRectangle = (totalHeight - heightMargin * 4) / amountOfValues;
 
             // Creation of the main background
             System.Windows.Shapes.Rectangle mainArea = new System.Windows.Shapes.Rectangle()
@@ -68,7 +84,7 @@ namespace sorting_algorithms_visualizer
             Canvas.SetBottom(mainArea, heightMargin);
 
             // Populate the canva with rectangles
-            for (int i = 0; i < NUMS_USED; i++)
+            for (int i = 0; i < amountOfValues; i++)
             { 
                 // Random colors
                 SolidColorBrush mySolidColorBrush = new SolidColorBrush();
@@ -89,6 +105,23 @@ namespace sorting_algorithms_visualizer
 
                 rectangles.Append(rectangle);
             }
+
+            Log.PrintSuccess(TextLog, $"Population process finished. {amountOfValues} values added.");
+        }
+
+        private void InputNums_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var value = InputNums.Text;
+
+            if (value != null && int.TryParse(value, out int num) && num >= 2)
+            {
+                BtnPlay.IsEnabled = true;
+                return;
+            }
+
+            BtnPlay.IsEnabled = false;
+            InputNums.Text = "10";
+            InputNums.Focus();
         }
     }
 }
