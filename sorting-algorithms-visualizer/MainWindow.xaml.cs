@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -45,7 +46,6 @@ namespace sorting_algorithms_visualizer
             CanvasGraph.Children.Clear();
 
             // Variables used
-            Random rand = new Random();
             int amountOfValues = Convert.ToInt32(InputNums.Text);
             System.Windows.Shapes.Rectangle[] rectangles = {};
 
@@ -69,12 +69,28 @@ namespace sorting_algorithms_visualizer
             Canvas.SetLeft(mainArea, widthMargin);
             Canvas.SetBottom(mainArea, heightMargin);
 
+            // Color bars variables
+            int barSections = (int)Math.Ceiling(amountOfValues / 51d);
+            int countBarsInActualSection = 0;
+            int countOfBarSections = 1;
+            int scaleColor = (int)Math.Floor(255 / Math.Ceiling((double) amountOfValues / barSections));
+
             // Populate the canva with rectangles
             for (int i = 0; i < amountOfValues; i++)
             { 
-                // Random colors
+                // Colorizing rectangles
                 SolidColorBrush mySolidColorBrush = new SolidColorBrush();
-                mySolidColorBrush.Color = System.Windows.Media.Color.FromRgb((byte)rand.Next(255), (byte)rand.Next(255), (byte)rand.Next(255));
+
+                countBarsInActualSection++;
+                if (countBarsInActualSection > barSections)
+                {
+                    // A bar section completed, so the color scale is updated
+                    countOfBarSections++;
+                    countBarsInActualSection = 1;
+                }
+
+                // Green shades color based in scale
+                mySolidColorBrush.Color = System.Windows.Media.Color.FromRgb(0, (byte)(scaleColor * countOfBarSections), (byte) countOfBarSections);
 
                 // Rectangle creation and settings
                 System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle()
