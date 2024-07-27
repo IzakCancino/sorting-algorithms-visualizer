@@ -20,27 +20,6 @@ namespace sorting_algorithms_visualizer
     /// </summary>
     public partial class MainWindow : Window
     {
-        public struct RectangleNode
-        {
-            // Nodes used to storage the rectangles information
-            public int Value { get; set; }
-            public System.Windows.Shapes.Rectangle Rectangle { get; set; }
-
-            public RectangleNode(System.Windows.Shapes.Rectangle rectangle, int value)
-            {
-                Rectangle = rectangle;
-                Value = value;
-            }
-
-            public void FlipRectangles(RectangleNode otherNode)
-            {
-                // Changes the position in canvas between two rectangles
-                double otherLeft = Canvas.GetLeft(otherNode.Rectangle);
-                Canvas.SetLeft(otherNode.Rectangle, Canvas.GetLeft(this.Rectangle));
-                Canvas.SetLeft(this.Rectangle, otherLeft);
-            }
-        }
-
         public static List<RectangleNode> ShuffleRectangleNodes(List<RectangleNode> list)
         {
             // Suffles the rectangles nodes list
