@@ -20,6 +20,42 @@ namespace sorting_algorithms_visualizer
     /// </summary>
     public partial class MainWindow : Window
     {
+        public struct RectangleNode
+        {
+            // Nodes used to storage the rectangles information
+            public int Value { get; set; }
+            public System.Windows.Shapes.Rectangle Rectangle { get; set; }
+
+            public RectangleNode(System.Windows.Shapes.Rectangle rectangle, int value)
+            {
+                Rectangle = rectangle;
+                Value = value;
+            }
+
+            public void FlipRectangles(RectangleNode otherNode)
+            {
+                // Changes the position in canvas between two rectangles
+                double otherLeft = Canvas.GetLeft(otherNode.Rectangle);
+                Canvas.SetLeft(otherNode.Rectangle, Canvas.GetLeft(this.Rectangle));
+                Canvas.SetLeft(this.Rectangle, otherLeft);
+            }
+        }
+
+        public static List<RectangleNode> ShuffleRectangleNodes(List<RectangleNode> list)
+        {
+            // Suffles the rectangles nodes list
+            Random r = new Random();
+            int n = list.Count;
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = r.Next(0, i + 1);
+                (list[j], list[i]) = (list[i], list[j]);
+                list[i].FlipRectangles(list[j]);
+            }
+
+            return list;
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -60,7 +96,7 @@ namespace sorting_algorithms_visualizer
 
             // Variables used
             int amountOfValues = Convert.ToInt32(InputNums.Text);
-            System.Windows.Shapes.Rectangle[] rectangles = {};
+            List<RectangleNode> rectangles = new List<RectangleNode>();
 
             // Absolute dimensions of the canva
             double totalWidth = CanvasGraph.ActualWidth;
@@ -118,10 +154,13 @@ namespace sorting_algorithms_visualizer
                 Canvas.SetBottom(rectangle, heightMargin * 2);
                 Canvas.SetLeft(rectangle, (widthMargin * 2) + (widthOfEachRectangle * i * 2));
 
-                rectangles.Append(rectangle);
+                rectangles.Add(new RectangleNode(rectangle, i));
             }
 
             Log.PrintSuccess(TextLog, $"Population process finished. {amountOfValues} values added.");
+
+            // Shuffle list of nodes
+            rectangles = ShuffleRectangleNodes(rectangles);
         }        
     }
 }
