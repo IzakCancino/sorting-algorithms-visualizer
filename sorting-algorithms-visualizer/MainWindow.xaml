@@ -32,7 +32,7 @@
                     <Button x:Name="BtnPlay" Content="Start" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="96" Click="BtnPlay_Click" Margin="89,20,0,0"/>
 
                     <Label Content="Numbers to sort: " Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"></Label>
-                    <TextBox x:Name="InputNums" Text="50" Grid.Column="1" VerticalAlignment="Center" TextChanged="InputNums_TextChanged" Height="18" />
+                    <TextBox x:Name="InputNums" Text="50" Grid.Column="1" VerticalAlignment="Center" Height="18" ToolTip="An integer number greater or equal than 2" />
                 </Grid>
             </TabItem>
 

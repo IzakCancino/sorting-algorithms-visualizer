@@ -40,6 +40,18 @@ namespace sorting_algorithms_visualizer
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
+            // Validation of "values to sort" input. It must be an integer greater or equal than 2
+            var value = InputNums.Text;
+            if (value == null || !int.TryParse(value, out int num) || num < 2)
+            {
+                InputNums.Text = "10";
+                InputNums.Focus();
+                BtnPlay.IsEnabled = true;
+                Log.PrintError(TextLog, "*** Error: Numbers to sort must be an integer greater or equal than 2 ***");
+                return;
+            }
+
+            // Starting process
             Log.Clear(TextLog);
             Log.PrintAlert(TextLog, "Starting population process...");
 
@@ -110,22 +122,6 @@ namespace sorting_algorithms_visualizer
             }
 
             Log.PrintSuccess(TextLog, $"Population process finished. {amountOfValues} values added.");
-        }
-
-        private void InputNums_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            // Validation of "values to sort" input. It must be an integer greater or equal than 2
-            var value = InputNums.Text;
-
-            if (value != null && int.TryParse(value, out int num) && num >= 2)
-            {
-                BtnPlay.IsEnabled = true;
-                return;
-            }
-
-            BtnPlay.IsEnabled = false;
-            InputNums.Text = "10";
-            InputNums.Focus();
-        }
+        }        
     }
 }
