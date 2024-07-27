@@ -40,6 +40,7 @@ namespace sorting_algorithms_visualizer
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
+            Log.Clear(TextLog);
             Log.PrintAlert(TextLog, "Starting population process...");
 
             // Restart the canvas

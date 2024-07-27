@@ -41,5 +41,11 @@ namespace sorting_algorithms_visualizer
             p.Foreground = Brushes.Red;
             log.Document.Blocks.Add(p);
         }
+
+        public static void Clear(RichTextBox log)
+        {
+            log.Document.Blocks.Clear();
+            Print(log, " == Sorting Algorithms Visualizer (Log) == ");
+        }
     }
 }
