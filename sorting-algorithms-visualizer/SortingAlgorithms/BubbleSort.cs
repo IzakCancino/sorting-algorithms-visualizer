@@ -39,7 +39,7 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
                         list[j].FlipRectangles(list[j + 1]);
                         Log.Print(log, $" - Values {i + 1} and {j + 1} flipped");
 
-                        await Task.Delay(15);
+                        await Task.Delay(15, cancellationToken);
                     }
                 }                
 
@@ -47,11 +47,11 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
                 cancellationToken.ThrowIfCancellationRequested();
 
                 Log.Print(log, $" + Value {length - i} sorted");
-                list[length - i - 1].BlinkRectangle(Brushes.Red);
+                await list[length - i - 1].BlinkRectangle(Brushes.Red);
             }
 
             Log.Print(log, " + Value 1 sorted");
-            list[0].BlinkRectangle(Brushes.Red);
+            await list[0].BlinkRectangle(Brushes.Red);
 
             Log.PrintSuccess(log, $"Sorting process finished.");
         }

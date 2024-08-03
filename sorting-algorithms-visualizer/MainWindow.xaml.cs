@@ -23,6 +23,8 @@ namespace sorting_algorithms_visualizer
     /// </summary>
     public partial class MainWindow : Window
     {
+        public List<RectangleNode> Rectangles;
+        public int RectanglesSorted;
         private CancellationTokenSource? _cancellationTokenSource;
         private bool _showLogAlert;
 
@@ -44,6 +46,7 @@ namespace sorting_algorithms_visualizer
         public MainWindow()
         {
             InitializeComponent();
+            Rectangles = new List<RectangleNode>();
         }
 
         private void GridSplitterPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -61,15 +64,15 @@ namespace sorting_algorithms_visualizer
 
         private async void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
-            // Validation of "values to sort" input. It must be an integer greater or equal than 2
-            var value = InputNums.Text;
-            if (value == null || !int.TryParse(value, out int num) || num < 2)
-            {
-                InputNums.Text = "10";
-                InputNums.Focus();
-                Log.PrintError(TextLog, "*** Error: Numbers to sort must be an integer greater or equal than 2 ***");
-                return;
-            }
+            // Disable and enable specific elements
+            InputNums.IsEnabled = false;
+            SelectorSortingAlgorithm.IsEnabled = false;
+            BtnScramble.IsEnabled = false;
+            BtnPlay.IsEnabled = false;
+            BtnCancel.IsEnabled = true;
+
+            // Create a new CancellationTokenSource for the new sort operation
+            _cancellationTokenSource = new CancellationTokenSource();
 
             // Sorting algorithm selected
             int selection = SelectorSortingAlgorithm.SelectedIndex;
@@ -86,8 +89,42 @@ namespace sorting_algorithms_visualizer
                     return;
             }
 
-            // Cancel the previous sort operation if it is still running
-            _cancellationTokenSource?.Cancel();
+            Log.PrintAlert(TextLog, $"Starting sorting process...");
+            Log.Print(TextLog, $"Algorithm: {sortingAlgorithm.Name}");
+
+            // Sort execution
+            try
+            {
+                await sortingAlgorithm.Sort(Rectangles, TextLog, _cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                Log.PrintError(TextLog, "Sorting execution stopped.");
+            }
+            catch (Exception ex)
+            {
+                Log.PrintError(TextLog, $"Error: {ex.Message}.");
+            }
+        }
+
+        private void BtnScramble_Click(object sender, RoutedEventArgs e)
+        {
+            // Validation of "values to sort" input. It must be an integer greater or equal than 2
+            var value = InputNums.Text;
+            if (value == null || !int.TryParse(value, out int num) || num < 2)
+            {
+                InputNums.Text = "10";
+                InputNums.Focus();
+                Log.PrintError(TextLog, "*** Error: Numbers to sort must be an integer greater or equal than 2 ***");
+                return;
+            }
+
+            // Disable and enable specific elements
+            InputNums.IsEnabled = true;
+            SelectorSortingAlgorithm.IsEnabled = true;
+            BtnScramble.IsEnabled = true;
+            BtnPlay.IsEnabled = true;
+            BtnCancel.IsEnabled = false;
 
             // Starting process
             Log.Clear(TextLog);
@@ -98,7 +135,7 @@ namespace sorting_algorithms_visualizer
 
             // Variables used
             int amountOfValues = Convert.ToInt32(InputNums.Text);
-            List<RectangleNode> rectangles = new List<RectangleNode>();
+            Rectangles = new List<RectangleNode>();
 
             // Absolute dimensions of the canva
             double totalWidth = CanvasGraph.ActualWidth;
@@ -124,11 +161,11 @@ namespace sorting_algorithms_visualizer
             int barSections = (int)Math.Ceiling(amountOfValues / 51d);
             int countBarsInActualSection = 0;
             int countOfBarSections = 1;
-            int scaleColor = (int)Math.Floor(255 / Math.Ceiling((double) amountOfValues / barSections));
+            int scaleColor = (int)Math.Floor(255 / Math.Ceiling((double)amountOfValues / barSections));
 
             // Populate the canva with rectangles
             for (int i = 0; i < amountOfValues; i++)
-            { 
+            {
                 // Colorizing rectangles
                 SolidColorBrush mySolidColorBrush = new SolidColorBrush();
 
@@ -141,14 +178,14 @@ namespace sorting_algorithms_visualizer
                 }
 
                 // Green shades color based in scale
-                mySolidColorBrush.Color = System.Windows.Media.Color.FromRgb(0, (byte)(scaleColor * countOfBarSections), (byte) countOfBarSections);
+                mySolidColorBrush.Color = System.Windows.Media.Color.FromRgb(0, (byte)(scaleColor * countOfBarSections), (byte)countOfBarSections);
 
                 // Rectangle creation and settings
                 System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle()
                 {
                     Width = widthOfEachRectangle,
                     Height = heightOfEachRectangle * (i + 1),
-                    Fill = mySolidColorBrush                    
+                    Fill = mySolidColorBrush
                 };
 
                 CanvasGraph.Children.Add(rectangle);
@@ -156,33 +193,26 @@ namespace sorting_algorithms_visualizer
                 Canvas.SetBottom(rectangle, heightMargin * 2);
                 Canvas.SetLeft(rectangle, (widthMargin * 2) + (widthOfEachRectangle * i * 2));
 
-                rectangles.Add(new RectangleNode(rectangle, i));
+                Rectangles.Add(new RectangleNode(rectangle, i));
             }
 
             Log.PrintSuccess(TextLog, $"Population process finished. {amountOfValues} values added.");
 
             // Shuffle list of nodes
-            rectangles = ShuffleRectangleNodes(rectangles);
+            Rectangles = ShuffleRectangleNodes(Rectangles);
+        }
 
-            // Create a new CancellationTokenSource for the new sort operation
-            _cancellationTokenSource = new CancellationTokenSource();                     
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            // Cancel the previous sort operation if it is still running
+            _cancellationTokenSource?.Cancel();
 
-            Log.PrintAlert(TextLog, $"Starting sorting process...");
-            Log.Print(TextLog, $"Algorithm: {sortingAlgorithm.Name}");
-
-            // Sort execution
-            try
-            {
-                await sortingAlgorithm.Sort(rectangles, TextLog, _cancellationTokenSource.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                return;
-            }
-            catch (Exception ex)
-            {
-                Log.PrintError(TextLog, $"Error: {ex.Message}");
-            }
+            // Disable and enable specific elements
+            InputNums.IsEnabled = true;
+            SelectorSortingAlgorithm.IsEnabled = true;
+            BtnScramble.IsEnabled = true;
+            BtnPlay.IsEnabled = false;
+            BtnCancel.IsEnabled = false;
         }
 
         private void TabItem_GotFocus(object sender, RoutedEventArgs e)

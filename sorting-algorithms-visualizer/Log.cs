@@ -49,7 +49,7 @@ namespace sorting_algorithms_visualizer
         public static void Clear(RichTextBox log)
         {
             log.Document.Blocks.Clear();
-            Print(log, " == Sorting Algorithms Visualizer (Log) == ");
+            Print(log, " = Sorting Algorithms Visualizer (Log) =");
             log.ScrollToEnd();
         }
     }

@@ -28,7 +28,7 @@ namespace sorting_algorithms_visualizer
             Canvas.SetLeft(this.Rectangle, otherLeft);
         }
 
-        public async void BlinkRectangle(Brush brush) 
+        public async Task BlinkRectangle(Brush brush) 
         {
             Brush tempBrush = Rectangle.Fill;
             Rectangle.Fill = brush;
