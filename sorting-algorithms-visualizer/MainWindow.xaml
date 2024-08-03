@@ -46,8 +46,7 @@
                     <Label Content="Sorting algorithm: " Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Margin="0,20,0,0"/>
                     <ComboBox x:Name="SelectorSortingAlgorithm" Grid.Row="1" Grid.Column="1" Margin="0,20,0,0" SelectionChanged="SelectorSortingAlgorithm_SelectionChanged">
                         <ComboBoxItem IsSelected="True">Bubble sort</ComboBoxItem>
-                    </ComboBox>
-                    
+                    </ComboBox>                    
                 </Grid>
             </TabItem>
 
