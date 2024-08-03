@@ -28,9 +28,13 @@ namespace sorting_algorithms_visualizer
         private CancellationTokenSource? _cancellationTokenSource;
         private bool _showLogAlert;
 
+        /// <summary>
+        /// Suffles the rectangle nodes list
+        /// </summary>
+        /// <param name="list">A list of rectangle nodes in any order</param>
+        /// <returns>A list of rectangle nodes in a completly random order</returns>
         public static List<RectangleNode> ShuffleRectangleNodes(List<RectangleNode> list)
-        {
-            // Suffles the rectangles nodes list
+        { 
             Random r = new Random();
             int n = list.Count;
             for (int i = n - 1; i > 0; i--)
@@ -49,64 +53,9 @@ namespace sorting_algorithms_visualizer
             Rectangles = new List<RectangleNode>();
         }
 
-        private void GridSplitterPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            // Move the splitter to its default location
-            RootGrid.ColumnDefinitions[0].Width = new GridLength(300);
-        }
-
-        private void GridSplitterPanel_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
-        {
-            // Save in a tag the horizontal location of the splitter
-            int horizontalLocation = Convert.ToInt32(GridSplitterPanel.Tag.ToString());
-            GridSplitterPanel.Tag = horizontalLocation + (int)e.HorizontalChange;
-        }
-
-        private async void BtnPlay_Click(object sender, RoutedEventArgs e)
-        {
-            // Disable and enable specific elements
-            InputNums.IsEnabled = false;
-            SelectorSortingAlgorithm.IsEnabled = false;
-            BtnScramble.IsEnabled = false;
-            BtnPlay.IsEnabled = false;
-            BtnCancel.IsEnabled = true;
-
-            // Create a new CancellationTokenSource for the new sort operation
-            _cancellationTokenSource = new CancellationTokenSource();
-
-            // Sorting algorithm selected
-            int selection = SelectorSortingAlgorithm.SelectedIndex;
-            ISortingAlgorithm sortingAlgorithm;
-
-            switch (selection)
-            {
-                case 0:
-                    sortingAlgorithm = new BubbleSort();
-                    break;
-                default:
-                    SelectorSortingAlgorithm.Focus();
-                    Log.PrintError(TextLog, "*** Error: Invalid sorting algorithm selected ***");
-                    return;
-            }
-
-            Log.PrintAlert(TextLog, $"Starting sorting process...");
-            Log.Print(TextLog, $"Algorithm: {sortingAlgorithm.Name}");
-
-            // Sort execution
-            try
-            {
-                await sortingAlgorithm.Sort(Rectangles, TextLog, _cancellationTokenSource.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                Log.PrintError(TextLog, "Sorting execution stopped.");
-            }
-            catch (Exception ex)
-            {
-                Log.PrintError(TextLog, $"Error: {ex.Message}.");
-            }
-        }
-
+        /// <summary>
+        /// Starts the scramble process, by generating the determined number of rectagles in a random order
+        /// </summary>
         private void BtnScramble_Click(object sender, RoutedEventArgs e)
         {
             // Validation of "values to sort" input. It must be an integer greater or equal than 2
@@ -202,6 +151,57 @@ namespace sorting_algorithms_visualizer
             Rectangles = ShuffleRectangleNodes(Rectangles);
         }
 
+        /// <summary>
+        /// Start ordering the list <c>Rectangles</c> by using the selected sorting algorithm. This operation is asynchronous, and it can be cancelled.
+        /// </summary>
+        private async void BtnPlay_Click(object sender, RoutedEventArgs e)
+        {
+            // Disable and enable specific elements
+            InputNums.IsEnabled = false;
+            SelectorSortingAlgorithm.IsEnabled = false;
+            BtnScramble.IsEnabled = false;
+            BtnPlay.IsEnabled = false;
+            BtnCancel.IsEnabled = true;
+
+            // Create a new CancellationTokenSource for the new sort operation
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            // Sorting algorithm selected
+            int selection = SelectorSortingAlgorithm.SelectedIndex;
+            ISortingAlgorithm sortingAlgorithm;
+
+            switch (selection)
+            {
+                case 0:
+                    sortingAlgorithm = new BubbleSort();
+                    break;
+                default:
+                    SelectorSortingAlgorithm.Focus();
+                    Log.PrintError(TextLog, "*** Error: Invalid sorting algorithm selected ***");
+                    return;
+            }
+
+            Log.PrintAlert(TextLog, $"Starting sorting process...");
+            Log.Print(TextLog, $"Algorithm: {sortingAlgorithm.Name}");
+
+            // Sort execution
+            try
+            {
+                await sortingAlgorithm.Sort(Rectangles, TextLog, _cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                Log.PrintError(TextLog, "Sorting execution stopped.");
+            }
+            catch (Exception ex)
+            {
+                Log.PrintError(TextLog, $"Error: {ex.Message}.");
+            }
+        }
+
+        /// <summary>
+        /// Stops the asynchronous execution of the function <c>BtnPlay_Click()</c>
+        /// </summary>
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             // Cancel the previous sort operation if it is still running
@@ -213,6 +213,27 @@ namespace sorting_algorithms_visualizer
             BtnScramble.IsEnabled = true;
             BtnPlay.IsEnabled = false;
             BtnCancel.IsEnabled = false;
+        }
+
+        /// <summary>
+        /// Changes the information about the selected algorithm
+        /// </summary>
+        private void SelectorSortingAlgorithm_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int selection = SelectorSortingAlgorithm.SelectedIndex;
+            ISortingAlgorithm sortingAlgorithm;
+
+            switch (selection)
+            {
+                case 0:
+                    sortingAlgorithm = new BubbleSort();
+                    break;
+                default:
+                    return;
+            }
+
+            TextTimeComplexity.Content = sortingAlgorithm.TimeComplexity;
+            TextSpaceComplexity.Content = sortingAlgorithm.SpaceComplexity;
         }
 
         private void TabItem_GotFocus(object sender, RoutedEventArgs e)
@@ -235,24 +256,19 @@ namespace sorting_algorithms_visualizer
                 }
             }
             
+        }        
+
+        private void GridSplitterPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Move the splitter to its default location
+            RootGrid.ColumnDefinitions[0].Width = new GridLength(300);
         }
 
-        private void SelectorSortingAlgorithm_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void GridSplitterPanel_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            int selection = SelectorSortingAlgorithm.SelectedIndex;
-            ISortingAlgorithm sortingAlgorithm;
-
-            switch (selection)
-            {
-                case 0:
-                    sortingAlgorithm = new BubbleSort();
-                    break;
-                default:
-                    return;
-            }
-
-            TextTimeComplexity.Content = sortingAlgorithm.TimeComplexity;
-            TextSpaceComplexity.Content = sortingAlgorithm.SpaceComplexity;
+            // Save in a tag the horizontal location of the splitter
+            int horizontalLocation = Convert.ToInt32(GridSplitterPanel.Tag.ToString());
+            GridSplitterPanel.Tag = horizontalLocation + (int)e.HorizontalChange;
         }
     }
 }
