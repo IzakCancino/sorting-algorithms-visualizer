@@ -9,7 +9,10 @@ using System.Windows.Media;
 
 namespace sorting_algorithms_visualizer
 {
-    public class Log
+    /// <summary>
+    /// Static class with different methods to print information in the <c>RichTextBox</c> used as the log.
+    /// </summary>
+    public static class Log
     {
         public static void Print(RichTextBox log, string message)
         {            
