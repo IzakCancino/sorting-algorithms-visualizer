@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace sorting_algorithms_visualizer
 {
@@ -25,6 +26,15 @@ namespace sorting_algorithms_visualizer
             double otherLeft = Canvas.GetLeft(otherNode.Rectangle);
             Canvas.SetLeft(otherNode.Rectangle, Canvas.GetLeft(this.Rectangle));
             Canvas.SetLeft(this.Rectangle, otherLeft);
+        }
+
+        public async void BlinkRectangle(Brush brush) 
+        {
+            Brush tempBrush = Rectangle.Fill;
+            Rectangle.Fill = brush;
+
+            await Task.Delay(30);
+            Rectangle.Fill = tempBrush;
         }
     }
 }

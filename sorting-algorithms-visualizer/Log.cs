@@ -12,10 +12,11 @@ namespace sorting_algorithms_visualizer
     public class Log
     {
         public static void Print(RichTextBox log, string message)
-        {
+        {            
             Paragraph p = new Paragraph();
             p.Inlines.Add(message);
             log.Document.Blocks.Add(p);
+            log.ScrollToEnd();
         }
 
         public static void PrintSuccess(RichTextBox log, string message)
@@ -24,6 +25,7 @@ namespace sorting_algorithms_visualizer
             p.Inlines.Add(message);
             p.Foreground = Brushes.LightGreen;
             log.Document.Blocks.Add(p);
+            log.ScrollToEnd();
         }
 
         public static void PrintAlert(RichTextBox log, string message)
@@ -32,6 +34,7 @@ namespace sorting_algorithms_visualizer
             p.Inlines.Add(message);
             p.Foreground = Brushes.Yellow;
             log.Document.Blocks.Add(p);
+            log.ScrollToEnd();
         }
 
         public static void PrintError(RichTextBox log, string message)
@@ -40,12 +43,14 @@ namespace sorting_algorithms_visualizer
             p.Inlines.Add(message);
             p.Foreground = Brushes.Red;
             log.Document.Blocks.Add(p);
+            log.ScrollToEnd();
         }
 
         public static void Clear(RichTextBox log)
         {
             log.Document.Blocks.Clear();
             Print(log, " == Sorting Algorithms Visualizer (Log) == ");
+            log.ScrollToEnd();
         }
     }
 }

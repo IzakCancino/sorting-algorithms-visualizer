@@ -1,6 +1,9 @@
-﻿using System.Drawing;
+﻿using sorting_algorithms_visualizer.SortingAlgorithms;
+using System;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -20,6 +23,9 @@ namespace sorting_algorithms_visualizer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private CancellationTokenSource? _cancellationTokenSource;
+        private bool _showLogAlert;
+
         public static List<RectangleNode> ShuffleRectangleNodes(List<RectangleNode> list)
         {
             // Suffles the rectangles nodes list
@@ -53,7 +59,7 @@ namespace sorting_algorithms_visualizer
             GridSplitterPanel.Tag = horizontalLocation + (int)e.HorizontalChange;
         }
 
-        private void BtnPlay_Click(object sender, RoutedEventArgs e)
+        private async void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
             // Validation of "values to sort" input. It must be an integer greater or equal than 2
             var value = InputNums.Text;
@@ -61,10 +67,27 @@ namespace sorting_algorithms_visualizer
             {
                 InputNums.Text = "10";
                 InputNums.Focus();
-                BtnPlay.IsEnabled = true;
                 Log.PrintError(TextLog, "*** Error: Numbers to sort must be an integer greater or equal than 2 ***");
                 return;
             }
+
+            // Sorting algorithm selected
+            int selection = SelectorSortingAlgorithm.SelectedIndex;
+            ISortingAlgorithm sortingAlgorithm;
+
+            switch (selection)
+            {
+                case 0:
+                    sortingAlgorithm = new BubbleSort();
+                    break;
+                default:
+                    SelectorSortingAlgorithm.Focus();
+                    Log.PrintError(TextLog, "*** Error: Invalid sorting algorithm selected ***");
+                    return;
+            }
+
+            // Cancel the previous sort operation if it is still running
+            _cancellationTokenSource?.Cancel();
 
             // Starting process
             Log.Clear(TextLog);
@@ -140,6 +163,66 @@ namespace sorting_algorithms_visualizer
 
             // Shuffle list of nodes
             rectangles = ShuffleRectangleNodes(rectangles);
-        }        
+
+            // Create a new CancellationTokenSource for the new sort operation
+            _cancellationTokenSource = new CancellationTokenSource();                     
+
+            Log.PrintAlert(TextLog, $"Starting sorting process...");
+            Log.Print(TextLog, $"Algorithm: {sortingAlgorithm.Name}");
+
+            // Sort execution
+            try
+            {
+                await sortingAlgorithm.Sort(rectangles, TextLog, _cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+            catch (Exception ex)
+            {
+                Log.PrintError(TextLog, $"Error: {ex.Message}");
+            }
+        }
+
+        private void TabItem_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (!_showLogAlert)
+            {
+                var result = MessageBox.Show("Having the log tab opened while the sorting is being executed, could cause lag in the program.\nContinue showing this alert?", "Log Alert", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                switch (result)
+                {
+                    case MessageBoxResult.Cancel:
+                        _showLogAlert = true;
+                        break;
+                    case MessageBoxResult.Yes:
+                        _showLogAlert = false;
+                        break;
+                    case MessageBoxResult.No:
+                        _showLogAlert = true;
+                        break;
+                }
+            }
+            
+        }
+
+        private void SelectorSortingAlgorithm_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int selection = SelectorSortingAlgorithm.SelectedIndex;
+            ISortingAlgorithm sortingAlgorithm;
+
+            switch (selection)
+            {
+                case 0:
+                    sortingAlgorithm = new BubbleSort();
+                    break;
+                default:
+                    return;
+            }
+
+            TextTimeComplexity.Content = sortingAlgorithm.TimeComplexity;
+            TextSpaceComplexity.Content = sortingAlgorithm.SpaceComplexity;
+        }
     }
 }

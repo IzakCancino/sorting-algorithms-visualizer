@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!--Left controls panel-->
-        <TabControl Grid.Row="0" Grid.Column="0" Background="#FFFCFCFC">
+        <TabControl Grid.Row="0" Grid.Column="0" Background="#FFFCFCFC">            
             <!--Configuration tab-->
             <TabItem Header="Configuration">
                 <Grid Margin="10,10,10,10">
@@ -26,18 +26,33 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <Button x:Name="BtnPlay" Content="Start" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="96" Click="BtnPlay_Click" Margin="89,20,0,0"/>
+                    <Button x:Name="BtnPlay" Content="Start" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnPlay_Click" Margin="0,10,0,0"/>
 
                     <Label Content="Numbers to sort: " Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"/>
-                    <TextBox x:Name="InputNums" Text="50" Grid.Column="1" VerticalAlignment="Center" Height="18" ToolTip="An integer number greater or equal than 2" />
+                    <TextBox x:Name="InputNums" Text="50" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Height="18" ToolTip="An integer number greater or equal than 2" />
+
+                    <Label Content="Time complexity: " Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic"/>
+                    <Label x:Name="TextTimeComplexity" Content="O(n²)" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic"/>
+
+                    <Label Content="Space complexity: " Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
+                    <Label x:Name="TextSpaceComplexity" Content="O(1)" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
+
+                    <Label Content="Sorting algorithm: " Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Margin="0,20,0,0"/>
+                    <ComboBox x:Name="SelectorSortingAlgorithm" Grid.Row="1" Grid.Column="1" Margin="0,20,0,0" SelectionChanged="SelectorSortingAlgorithm_SelectionChanged">
+                        <ComboBoxItem IsSelected="True">Bubble sort</ComboBoxItem>
+                    </ComboBox>
+                    
                 </Grid>
             </TabItem>
 
             <!-- Log tab-->
-            <TabItem Header="Log">
+            <TabItem Header="Log" GotFocus="TabItem_GotFocus">
                 <Grid Background="#000000">
                     <RichTextBox x:Name="TextLog" Background="Black" Foreground="White" SelectionBrush="#FF57CCFA" SelectionTextBrush="Black" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" IsReadOnly="True">
                         <RichTextBox.Resources>
