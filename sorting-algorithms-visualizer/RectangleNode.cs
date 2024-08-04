@@ -40,12 +40,12 @@ namespace sorting_algorithms_visualizer
         /// Changes the color of the rectangle in the node for a specific amount of time.
         /// </summary>
         /// <param name="brush">The color which use for the blink.</param>
-        public async Task BlinkRectangle(Brush brush) 
+        public async Task BlinkRectangle(Brush brush, int time) 
         {
             Brush tempBrush = Rectangle.Fill;
             Rectangle.Fill = brush;
 
-            await Task.Delay(30);
+            await Task.Delay(time);
             Rectangle.Fill = tempBrush;
         }
     }

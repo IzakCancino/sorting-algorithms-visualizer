@@ -24,6 +24,8 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
         public async Task Sort(List<RectangleNode> list, MainWindow.SettingsSort settings, CancellationToken cancellationToken)
         {
             RichTextBox log = settings.Log;
+            int shortDelay = settings.Delay;
+            int longDelay = shortDelay * 2;
             int length = list.Count;
 
             for (int i = 0; i < length - 1; i++)
@@ -39,20 +41,22 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
                         (list[j], list[j + 1]) = (list[j + 1], list[j]);
                         list[j].FlipRectangles(list[j + 1]);
                         Log.Print(log, $" - Values {i + 1} and {j + 1} flipped");
-
-                        await Task.Delay(15, cancellationToken);
+                        await Task.Delay(shortDelay, cancellationToken);
                     }
-                }                
+                }
 
                 // Check if cancellation is requested
                 cancellationToken.ThrowIfCancellationRequested();
 
+                // Value completly sorted
+                await list[length - i - 1].BlinkRectangle(Brushes.Red, longDelay);
                 Log.Print(log, $" + Value {length - i} sorted");
-                await list[length - i - 1].BlinkRectangle(Brushes.Red);
+                await Task.Delay(shortDelay, cancellationToken);
             }
 
+            // Last value completly sorted
             Log.Print(log, " + Value 1 sorted");
-            await list[0].BlinkRectangle(Brushes.Red);
+            await list[0].BlinkRectangle(Brushes.Red, longDelay);
 
             Log.PrintSuccess(log, $"Sorting process finished.");
         }

@@ -34,6 +34,7 @@ namespace sorting_algorithms_visualizer
         public struct SettingsSort
         {
             public RichTextBox Log { get; set; }
+            public int Delay { get; set; }
         }
 
         /// <summary>
@@ -79,6 +80,7 @@ namespace sorting_algorithms_visualizer
             // Disable and enable specific elements
             InputNums.IsEnabled = true;
             SelectorSortingAlgorithm.IsEnabled = true;
+            SliderSpeed.IsEnabled = true;
             BtnScramble.IsEnabled = true;
             BtnPlay.IsEnabled = true;
             BtnCancel.IsEnabled = false;
@@ -167,6 +169,7 @@ namespace sorting_algorithms_visualizer
             // Disable and enable specific elements
             InputNums.IsEnabled = false;
             SelectorSortingAlgorithm.IsEnabled = false;
+            SliderSpeed.IsEnabled = false;
             BtnScramble.IsEnabled = false;
             BtnPlay.IsEnabled = false;
             BtnCancel.IsEnabled = true;
@@ -192,9 +195,30 @@ namespace sorting_algorithms_visualizer
             Log.PrintAlert(TextLog, $"Starting sorting process...");
             Log.Print(TextLog, $"Algorithm: {sortingAlgorithm.Name}");
 
+            // Calculations of delate based in the speed input
+            double speed = SliderSpeed.Value;
+            int delay;
+            if (speed == 5)
+            {
+                // Fastest execution. No delay
+                delay = 0;
+            }
+            else if (speed < 1)
+            {
+                // More delay between steps
+                delay = (int)Math.Ceiling(15 / speed);
+            }
+            else
+            {
+                // Less delay between steps
+                delay = (int)Math.Ceiling((0.625 * Math.Pow(speed, 2)) - (6.25 * speed) + 15.725);
+            }
+
+            // Settings structure used in the sorting
             SettingsSort settings = new SettingsSort()
             {
-                Log = TextLog
+                Log = TextLog,
+                Delay = delay
             };
 
             // Sort execution
@@ -210,6 +234,10 @@ namespace sorting_algorithms_visualizer
             {
                 Log.PrintError(TextLog, $"Error: {ex.Message}.");
             }
+            finally
+            {
+                BtnCancel_Click(sender, e);
+            }
         }
 
         /// <summary>
@@ -223,6 +251,7 @@ namespace sorting_algorithms_visualizer
             // Disable and enable specific elements
             InputNums.IsEnabled = true;
             SelectorSortingAlgorithm.IsEnabled = true;
+            SliderSpeed.IsEnabled = true;
             BtnScramble.IsEnabled = true;
             BtnPlay.IsEnabled = false;
             BtnCancel.IsEnabled = false;
