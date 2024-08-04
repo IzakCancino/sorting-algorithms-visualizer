@@ -21,8 +21,9 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
             SpaceComplexity = "O(1)";
         }
 
-        public async Task Sort(List<RectangleNode> list, RichTextBox log, CancellationToken cancellationToken)
+        public async Task Sort(List<RectangleNode> list, MainWindow.SettingsSort settings, CancellationToken cancellationToken)
         {
+            RichTextBox log = settings.Log;
             int length = list.Count;
 
             for (int i = 0; i < length - 1; i++)

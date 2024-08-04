@@ -29,6 +29,14 @@ namespace sorting_algorithms_visualizer
         private bool _showLogAlert;
 
         /// <summary>
+        /// Structure that storages all the settings, objects and values necessary to execute a sort algorithm.
+        /// </summary>
+        public struct SettingsSort
+        {
+            public RichTextBox Log { get; set; }
+        }
+
+        /// <summary>
         /// Suffles the rectangle nodes list
         /// </summary>
         /// <param name="list">A list of rectangle nodes in any order</param>
@@ -184,10 +192,15 @@ namespace sorting_algorithms_visualizer
             Log.PrintAlert(TextLog, $"Starting sorting process...");
             Log.Print(TextLog, $"Algorithm: {sortingAlgorithm.Name}");
 
+            SettingsSort settings = new SettingsSort()
+            {
+                Log = TextLog
+            };
+
             // Sort execution
             try
             {
-                await sortingAlgorithm.Sort(Rectangles, TextLog, _cancellationTokenSource.Token);
+                await sortingAlgorithm.Sort(Rectangles, settings, _cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {

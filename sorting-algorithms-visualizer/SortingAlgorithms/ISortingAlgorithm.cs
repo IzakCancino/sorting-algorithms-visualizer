@@ -17,8 +17,8 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
         /// Sort a specific list of <c>RectangleNode</c> type.
         /// </summary>
         /// <param name="list">List of nodes to sort.</param>
-        /// <param name="log">Log text box used to print information about the process.</param>
+        /// <param name="settings">Structure with different setting to be used in the execution.</param>
         /// <param name="cancellationToken">Token used in case of the process is canceled by another one.</param>
-        public Task Sort(List<RectangleNode> list, RichTextBox log, CancellationToken cancellationToken);
+        public Task Sort(List<RectangleNode> list, MainWindow.SettingsSort settings, CancellationToken cancellationToken);
     }
 }
