@@ -134,6 +134,7 @@ namespace sorting_algorithms_visualizer
             InputNums.IsEnabled = true;
             SelectorSortingAlgorithm.IsEnabled = true;
             SliderSpeed.IsEnabled = true;
+            ColorSelector.IsEnabled = true;
             BtnGenerate.IsEnabled = true;
             BtnPlay.IsEnabled = true;
             BtnCancel.IsEnabled = false;
@@ -237,6 +238,7 @@ namespace sorting_algorithms_visualizer
             InputNums.IsEnabled = false;
             SelectorSortingAlgorithm.IsEnabled = false;
             SliderSpeed.IsEnabled = false;
+            ColorSelector.IsEnabled = false;
             BtnGenerate.IsEnabled = false;
             BtnPlay.IsEnabled = false;
             BtnCancel.IsEnabled = true;
@@ -354,6 +356,7 @@ namespace sorting_algorithms_visualizer
             InputNums.IsEnabled = true;
             SelectorSortingAlgorithm.IsEnabled = true;
             SliderSpeed.IsEnabled = true;
+            ColorSelector.IsEnabled = true;
             BtnGenerate.IsEnabled = true;
             BtnPlay.IsEnabled = false;
             BtnCancel.IsEnabled = false;
