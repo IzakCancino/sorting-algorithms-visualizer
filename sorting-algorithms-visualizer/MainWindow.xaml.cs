@@ -24,9 +24,12 @@ namespace sorting_algorithms_visualizer
     public partial class MainWindow : Window
     {
         public List<RectangleNode> Rectangles;
-        public int RectanglesSorted;
+
         private CancellationTokenSource? _cancellationTokenSource;
         private bool _showLogAlert;
+
+        public Dictionary<string, ColorPalette> ColorPalettes;
+        public ColorPalette ActualColorPalette;
 
         /// <summary>
         /// Structure that storages all the settings, objects and values necessary to execute a sort algorithm.
@@ -35,7 +38,18 @@ namespace sorting_algorithms_visualizer
         {
             public RichTextBox Log { get; set; }
             public int Delay { get; set; }
+            public Brush ContrastColor { get; set; }
         }
+
+        /// <summary>
+        /// Structure with the mask (to create the color) or contrast color used in the rectangles 
+        /// </summary>
+        public struct ColorPalette
+        {
+            public int[] MainMask { get; set; }
+            public Brush ContrastColor { get; set; }
+        }
+
 
         /// <summary>
         /// Suffles the rectangle nodes list
@@ -58,8 +72,46 @@ namespace sorting_algorithms_visualizer
 
         public MainWindow()
         {
-            InitializeComponent();
             Rectangles = new List<RectangleNode>();
+
+            // Filling the dictionary of color palettes with all the options of colors to use in the graph
+            ColorPalettes = new Dictionary<string, ColorPalette>
+            {
+                {
+                    "Green",
+                    new ColorPalette()
+                    {
+                        MainMask = [0, 1, 0],
+                        ContrastColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
+                    }
+                },
+                {
+                    "Yellow",
+                    new ColorPalette()
+                    {
+                        MainMask = [1, 1, 0],
+                        ContrastColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 230))
+                    }
+                },
+                {
+                    "Blue",
+                    new ColorPalette()
+                    {
+                        MainMask = [0, 1, 1],
+                        ContrastColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 85, 0))
+                    }
+                },
+                {
+                    "B&W",
+                    new ColorPalette()
+                    {
+                        MainMask = [1, 1, 1],
+                        ContrastColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
+                    }
+                }
+            };
+
+            InitializeComponent();
         }
 
         /// <summary>
@@ -121,6 +173,12 @@ namespace sorting_algorithms_visualizer
             int countBarsInActualSection = 0;
             int countOfBarSections = 1;
             int scaleColor = (int)Math.Floor(255 / Math.Ceiling((double)amountOfValues / barSections));
+            
+            ActualColorPalette = ColorPalettes[
+                ((ComboBoxItem)ColorSelector.SelectedItem)
+                .Content.ToString() 
+                ?? "Green"
+            ];
 
             // Populate the canva with rectangles
             for (int i = 0; i < amountOfValues; i++)
@@ -136,8 +194,14 @@ namespace sorting_algorithms_visualizer
                     countBarsInActualSection = 1;
                 }
 
-                // Green shades color based in scale
-                mySolidColorBrush.Color = System.Windows.Media.Color.FromRgb(0, (byte)(scaleColor * countOfBarSections), (byte)countOfBarSections);
+                // Color shades based in scale
+                int amountOfColor = scaleColor * countOfBarSections;
+
+                mySolidColorBrush.Color = System.Windows.Media.Color.FromRgb(
+                    (byte)(amountOfColor * ActualColorPalette.MainMask[0]),    
+                    (byte)(amountOfColor * ActualColorPalette.MainMask[1]),    
+                    (byte)(amountOfColor * ActualColorPalette.MainMask[2])
+                );
 
                 // Rectangle creation and settings
                 System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle()
@@ -218,7 +282,8 @@ namespace sorting_algorithms_visualizer
             SettingsSort settings = new SettingsSort()
             {
                 Log = TextLog,
-                Delay = delay
+                Delay = delay,
+                ContrastColor = ActualColorPalette.ContrastColor
             };
 
             // Sort execution

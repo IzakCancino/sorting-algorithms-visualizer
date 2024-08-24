@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!--Left controls panel-->
-        <TabControl Grid.Row="0" Grid.Column="0" Background="#FFFCFCFC">            
+        <TabControl Grid.Row="0" Grid.Column="0" Background="#FFFCFCFC">
             <!--Configuration tab-->
             <TabItem Header="Configuration">
                 <Grid Margin="10,10,10,10">
@@ -30,13 +30,14 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="36"/>
                         <RowDefinition Height="36"/>
                     </Grid.RowDefinitions>
 
-                    <Button x:Name="BtnScramble" Content="Scramble" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnScramble_Click" Margin="0,10,0,0"/>
-                    <Button x:Name="BtnPlay" Content="Start" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnPlay_Click" Margin="0,5,0,0" IsEnabled="False"/>
-                    <Button x:Name="BtnCancel" Content="Cancel" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnCancel_Click" Margin="0,5,0,0" IsEnabled="False"/>
+                    <Button x:Name="BtnScramble" Content="Scramble" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnScramble_Click" Margin="0,10,0,0"/>
+                    <Button x:Name="BtnPlay" Content="Start" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnPlay_Click" Margin="0,5,0,0" IsEnabled="False"/>
+                    <Button x:Name="BtnCancel" Content="Cancel" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnCancel_Click" Margin="0,5,0,0" IsEnabled="False"/>
 
                     <Label Content="Numbers to sort: " Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"/>
                     <TextBox x:Name="InputNums" Text="50" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Height="18" ToolTip="An integer number greater or equal than 2"/>
@@ -47,16 +48,25 @@
                         <Slider x:Name="SliderSpeed" VerticalAlignment="Center" Minimum="0.1" Value="1" Ticks="0.1 0.5 1 2 3 4 5" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Maximum="5" />
                     </DockPanel>
 
-                    <Label Content="Time complexity: " Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic"/>
-                    <Label x:Name="TextTimeComplexity" Content="O(n²)" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic"/>
+                    <!--Color selector-->
+                    <Label Content="Graphic color: " Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right"/>
+                    <ComboBox x:Name="ColorSelector" Grid.Row="2" Grid.Column="1">
+                        <ComboBoxItem Content="Green" IsSelected="True"></ComboBoxItem>
+                        <ComboBoxItem Content="Yellow"></ComboBoxItem>
+                        <ComboBoxItem Content="Blue"></ComboBoxItem>
+                        <ComboBoxItem Content="B&amp;W"></ComboBoxItem>
+                    </ComboBox>
 
-                    <Label Content="Space complexity: " Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
-                    <Label x:Name="TextSpaceComplexity" Content="O(1)" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
+                    <Label Content="Time complexity: " Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic"/>
+                    <Label x:Name="TextTimeComplexity" Content="O(n²)" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic"/>
 
-                    <Label Content="Sorting algorithm: " Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Margin="0,20,0,0"/>
-                    <ComboBox x:Name="SelectorSortingAlgorithm" Grid.Row="2" Grid.Column="1" Margin="0,20,0,0" SelectionChanged="SelectorSortingAlgorithm_SelectionChanged">
+                    <Label Content="Space complexity: " Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
+                    <Label x:Name="TextSpaceComplexity" Content="O(1)" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
+
+                    <Label Content="Sorting algorithm: " Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Margin="0,20,0,0"/>
+                    <ComboBox x:Name="SelectorSortingAlgorithm" Grid.Row="3" Grid.Column="1" Margin="0,20,0,0" SelectionChanged="SelectorSortingAlgorithm_SelectionChanged">
                         <ComboBoxItem IsSelected="True">Bubble sort</ComboBoxItem>
-                    </ComboBox>                    
+                    </ComboBox>
                 </Grid>
             </TabItem>
 

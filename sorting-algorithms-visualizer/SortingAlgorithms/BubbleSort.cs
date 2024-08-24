@@ -23,11 +23,15 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
 
         public async Task Sort(List<RectangleNode> list, MainWindow.SettingsSort settings, CancellationToken cancellationToken)
         {
+            // Settings variables
             RichTextBox log = settings.Log;
             int shortDelay = settings.Delay;
+            Brush contrastColor = settings.ContrastColor;
+
             int longDelay = shortDelay * 2;
             int length = list.Count;
 
+            // Bubble sort process
             for (int i = 0; i < length - 1; i++)
             {
                 for (int j = 0; j < length - i - 1; j++)
@@ -49,14 +53,14 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
                 cancellationToken.ThrowIfCancellationRequested();
 
                 // Value completly sorted
-                await list[length - i - 1].BlinkRectangle(Brushes.Red, longDelay);
+                await list[length - i - 1].BlinkRectangle(contrastColor, longDelay);
                 Log.Print(log, $" + Value {length - i} sorted");
                 await Task.Delay(shortDelay, cancellationToken);
             }
 
             // Last value completly sorted
             Log.Print(log, " + Value 1 sorted");
-            await list[0].BlinkRectangle(Brushes.Red, longDelay);
+            await list[0].BlinkRectangle(contrastColor, longDelay);
 
             Log.PrintSuccess(log, $"Sorting process finished.");
         }
