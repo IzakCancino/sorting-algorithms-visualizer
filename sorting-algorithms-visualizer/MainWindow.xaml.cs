@@ -262,7 +262,7 @@ namespace sorting_algorithms_visualizer
             Log.PrintAlert(TextLog, $"Starting sorting process...");
             Log.Print(TextLog, $"Algorithm: {sortingAlgorithm.Name}");
 
-            // Calculations of delate based in the speed input
+            // Calculations of delay based in the speed input
             double speed = SliderSpeed.Value;
             int delay;
             if (speed == 5)
@@ -278,7 +278,7 @@ namespace sorting_algorithms_visualizer
             else
             {
                 // Less delay between steps
-                delay = (int)Math.Ceiling((0.625 * Math.Pow(speed, 2)) - (6.25 * speed) + 15.725);
+                delay = (int)Math.Ceiling((-4.79 * speed) + 19.7);
             }
 
             // Settings structure used in the sorting
@@ -407,7 +407,6 @@ namespace sorting_algorithms_visualizer
             Log.IsEnabled = false;
         }
 
-
         private void GridSplitterPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Move the splitter to its default location
@@ -420,6 +419,5 @@ namespace sorting_algorithms_visualizer
             int horizontalLocation = Convert.ToInt32(GridSplitterPanel.Tag.ToString());
             GridSplitterPanel.Tag = horizontalLocation + (int)e.HorizontalChange;
         }
-        
     }
 }
