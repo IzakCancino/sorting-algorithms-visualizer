@@ -1,9 +1,11 @@
 ﻿using sorting_algorithms_visualizer.SortingAlgorithms;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -26,7 +28,6 @@ namespace sorting_algorithms_visualizer
         public List<RectangleNode> Rectangles;
 
         private CancellationTokenSource? _cancellationTokenSource;
-        private bool _showLogAlert;
 
         public Dictionary<string, ColorPalette> ColorPalettes;
         public ColorPalette ActualColorPalette;
@@ -117,7 +118,7 @@ namespace sorting_algorithms_visualizer
         /// <summary>
         /// Starts the scramble process, by generating the determined number of rectagles in a random order
         /// </summary>
-        private void BtnScramble_Click(object sender, RoutedEventArgs e)
+        private void BtnGenerate_Click(object sender, RoutedEventArgs e)
         {
             // Validation of "values to sort" input. It must be an integer greater or equal than 2
             var value = InputNums.Text;
@@ -133,9 +134,11 @@ namespace sorting_algorithms_visualizer
             InputNums.IsEnabled = true;
             SelectorSortingAlgorithm.IsEnabled = true;
             SliderSpeed.IsEnabled = true;
-            BtnScramble.IsEnabled = true;
+            BtnGenerate.IsEnabled = true;
             BtnPlay.IsEnabled = true;
             BtnCancel.IsEnabled = false;
+            LabelSortingTime.Content = string.Empty;
+            LabelSortingTime.Visibility = Visibility.Visible;
 
             // Starting process
             Log.Clear(TextLog);
@@ -234,7 +237,7 @@ namespace sorting_algorithms_visualizer
             InputNums.IsEnabled = false;
             SelectorSortingAlgorithm.IsEnabled = false;
             SliderSpeed.IsEnabled = false;
-            BtnScramble.IsEnabled = false;
+            BtnGenerate.IsEnabled = false;
             BtnPlay.IsEnabled = false;
             BtnCancel.IsEnabled = true;
 
@@ -287,6 +290,8 @@ namespace sorting_algorithms_visualizer
             };
 
             // Sort execution
+            var timer = new Stopwatch();
+            timer.Start();
             try
             {
                 await sortingAlgorithm.Sort(Rectangles, settings, _cancellationTokenSource.Token);
@@ -294,13 +299,45 @@ namespace sorting_algorithms_visualizer
             catch (OperationCanceledException)
             {
                 Log.PrintError(TextLog, "Sorting execution stopped.");
+                LabelSortingTime.Visibility = Visibility.Hidden;
             }
             catch (Exception ex)
             {
                 Log.PrintError(TextLog, $"Error: {ex.Message}.");
+                LabelSortingTime.Visibility = Visibility.Hidden;
             }
             finally
             {
+                Log.PrintSuccess(TextLog, $"Sorting process finished.");
+
+                // Sorting timer stopped
+                timer.Stop();
+                TimeSpan timeTaken = timer.Elapsed;
+
+                if (timeTaken.Minutes != 0)
+                {
+                    LabelSortingTime.Content =
+                        "Sorting time: "
+                        + timeTaken.Minutes + "m "
+                        + timeTaken.Seconds + "s "
+                        + timeTaken.Milliseconds + "ms ";
+                }
+                else if (timeTaken.Seconds != 0)
+                {
+                    LabelSortingTime.Content =
+                        "Sorting time: "
+                        + timeTaken.Seconds + "s "
+                        + timeTaken.Milliseconds + "ms ";
+                }
+                else
+                {
+                    LabelSortingTime.Content =
+                        "Sorting time: "
+                        + timeTaken.Milliseconds + "ms "
+                        + timeTaken.Microseconds + "us "
+                        + timeTaken.Nanoseconds + "ns";
+                }
+
                 BtnCancel_Click(sender, e);
             }
         }
@@ -317,7 +354,7 @@ namespace sorting_algorithms_visualizer
             InputNums.IsEnabled = true;
             SelectorSortingAlgorithm.IsEnabled = true;
             SliderSpeed.IsEnabled = true;
-            BtnScramble.IsEnabled = true;
+            BtnGenerate.IsEnabled = true;
             BtnPlay.IsEnabled = false;
             BtnCancel.IsEnabled = false;
         }
@@ -343,27 +380,33 @@ namespace sorting_algorithms_visualizer
             TextSpaceComplexity.Content = sortingAlgorithm.SpaceComplexity;
         }
 
-        private void TabItem_GotFocus(object sender, RoutedEventArgs e)
+        private void CheckBoxLog_Click(object sender, RoutedEventArgs e)
         {
-            if (!_showLogAlert)
+            // Enbling the log
+            if (CheckBoxLog.IsChecked ?? false)
             {
-                var result = MessageBox.Show("Having the log tab opened while the sorting is being executed, could cause lag in the program.\nContinue showing this alert?", "Log Alert", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                var result = MessageBox.Show("Having the log execution enabled could slow down the program, and it could add extra time to the sorting timer.\nDo you want to continue?", "Log Alert", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-                switch (result)
+                if (result == MessageBoxResult.Yes)
                 {
-                    case MessageBoxResult.Cancel:
-                        _showLogAlert = true;
-                        break;
-                    case MessageBoxResult.Yes:
-                        _showLogAlert = false;
-                        break;
-                    case MessageBoxResult.No:
-                        _showLogAlert = true;
-                        break;
+                    Log.IsEnabled = true;
+                    TextLog.IsEnabled = true;
+                    Log.Clear(TextLog);
+                    return;
                 }
+
+                CheckBoxLog.IsChecked = false;
             }
-            
-        }        
+
+            TextLog.Document.Blocks.Clear();
+            Paragraph p = new Paragraph();
+            p.Inlines.Add("Log disabled");
+            TextLog.Document.Blocks.Add(p);
+
+            TextLog.IsEnabled = false;
+            Log.IsEnabled = false;
+        }
+
 
         private void GridSplitterPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -377,5 +420,6 @@ namespace sorting_algorithms_visualizer
             int horizontalLocation = Convert.ToInt32(GridSplitterPanel.Tag.ToString());
             GridSplitterPanel.Tag = horizontalLocation + (int)e.HorizontalChange;
         }
+        
     }
 }

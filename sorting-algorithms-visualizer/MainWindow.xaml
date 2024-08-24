@@ -33,9 +33,10 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="36"/>
                         <RowDefinition Height="36"/>
+                        <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
 
-                    <Button x:Name="BtnScramble" Content="Scramble" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnScramble_Click" Margin="0,10,0,0"/>
+                    <Button x:Name="BtnGenerate" Content="Generate" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnGenerate_Click" Margin="0,10,0,0"/>
                     <Button x:Name="BtnPlay" Content="Start" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnPlay_Click" Margin="0,5,0,0" IsEnabled="False"/>
                     <Button x:Name="BtnCancel" Content="Cancel" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnCancel_Click" Margin="0,5,0,0" IsEnabled="False"/>
 
@@ -67,13 +68,28 @@
                     <ComboBox x:Name="SelectorSortingAlgorithm" Grid.Row="3" Grid.Column="1" Margin="0,20,0,0" SelectionChanged="SelectorSortingAlgorithm_SelectionChanged">
                         <ComboBoxItem IsSelected="True">Bubble sort</ComboBoxItem>
                     </ComboBox>
+
+                    <Label x:Name="LabelSortingTime" Grid.Row="8" Grid.ColumnSpan="2" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF393838" FontStyle="Italic"/>
                 </Grid>
             </TabItem>
 
             <!-- Log tab-->
-            <TabItem Header="Log" GotFocus="TabItem_GotFocus">
-                <Grid Background="#000000">
-                    <RichTextBox x:Name="TextLog" Background="Black" Foreground="White" SelectionBrush="#FF57CCFA" SelectionTextBrush="Black" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" IsReadOnly="True">
+            <TabItem Header="Log">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <CheckBox x:Name="CheckBoxLog" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Click="CheckBoxLog_Click"></CheckBox>
+                    <Label Content="Enable log: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"></Label>
+                    
+                    <RichTextBox x:Name="TextLog" Grid.Row="2" Grid.ColumnSpan="3" Background="Black" Foreground="White" SelectionBrush="#FF57CCFA" SelectionTextBrush="Black" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" IsReadOnly="True" IsEnabled="False">
                         <RichTextBox.Resources>
                             <Style TargetType="{x:Type Paragraph}">
                                 <Setter Property="Margin" Value="0"/>
@@ -82,7 +98,7 @@
 
                         <FlowDocument>
                             <Paragraph>
-                                <Run Text=" = Sorting Algorithms Visualizer (Log) = "/>
+                                <Run Text="Log disabled"/>
                             </Paragraph>
                         </FlowDocument>
                     </RichTextBox>

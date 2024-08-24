@@ -14,8 +14,12 @@ namespace sorting_algorithms_visualizer
     /// </summary>
     public static class Log
     {
+        public static bool IsEnabled = false;
+
         public static void Print(RichTextBox log, string message)
-        {            
+        {
+            if (!IsEnabled) return;
+
             Paragraph p = new Paragraph();
             p.Inlines.Add(message);
             log.Document.Blocks.Add(p);
@@ -24,6 +28,8 @@ namespace sorting_algorithms_visualizer
 
         public static void PrintSuccess(RichTextBox log, string message)
         {
+            if (!IsEnabled) return;
+
             Paragraph p = new Paragraph();
             p.Inlines.Add(message);
             p.Foreground = Brushes.LightGreen;
@@ -33,6 +39,8 @@ namespace sorting_algorithms_visualizer
 
         public static void PrintAlert(RichTextBox log, string message)
         {
+            if (!IsEnabled) return;
+
             Paragraph p = new Paragraph();
             p.Inlines.Add(message);
             p.Foreground = Brushes.Yellow;
@@ -42,6 +50,8 @@ namespace sorting_algorithms_visualizer
 
         public static void PrintError(RichTextBox log, string message)
         {
+            if (!IsEnabled) return;
+
             Paragraph p = new Paragraph();
             p.Inlines.Add(message);
             p.Foreground = Brushes.Red;
@@ -51,6 +61,8 @@ namespace sorting_algorithms_visualizer
 
         public static void Clear(RichTextBox log)
         {
+            if (!IsEnabled) return;
+
             log.Document.Blocks.Clear();
             Print(log, " = Sorting Algorithms Visualizer (Log) =");
             log.ScrollToEnd();

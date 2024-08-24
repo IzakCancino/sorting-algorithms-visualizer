@@ -30,6 +30,7 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
 
             int longDelay = shortDelay * 2;
             int length = list.Count;
+            int steps = 0;
 
             // Bubble sort process
             for (int i = 0; i < length - 1; i++)
@@ -44,7 +45,7 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
                     {
                         (list[j], list[j + 1]) = (list[j + 1], list[j]);
                         list[j].FlipRectangles(list[j + 1]);
-                        Log.Print(log, $" - Values {i + 1} and {j + 1} flipped");
+                        steps++;
                         await Task.Delay(shortDelay, cancellationToken);
                     }
                 }
@@ -54,15 +55,14 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
 
                 // Value completly sorted
                 await list[length - i - 1].BlinkRectangle(contrastColor, longDelay);
-                Log.Print(log, $" + Value {length - i} sorted");
+                Log.Print(log, $" + Value {length - i} sorted ({steps} steps)");
+                steps = 0;
                 await Task.Delay(shortDelay, cancellationToken);
             }
 
             // Last value completly sorted
-            Log.Print(log, " + Value 1 sorted");
+            Log.Print(log, $" + Value 1 sorted ({steps} steps)");
             await list[0].BlinkRectangle(contrastColor, longDelay);
-
-            Log.PrintSuccess(log, $"Sorting process finished.");
         }
     }
 }
