@@ -275,12 +275,12 @@ namespace sorting_algorithms_visualizer
             else if (speed < 1)
             {
                 // More delay between steps
-                delay = (int)Math.Ceiling(15 / speed);
+                delay = (int)Math.Ceiling(30 / speed);
             }
             else
             {
                 // Less delay between steps
-                delay = (int)Math.Ceiling((-4.79 * speed) + 19.7);
+                delay = (int)Math.Ceiling((-9.58 * speed) + 39.4);
             }
 
             // Settings structure used in the sorting

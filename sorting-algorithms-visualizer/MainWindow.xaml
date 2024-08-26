@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:sorting_algorithms_visualizer"
         mc:Ignorable="d"
-        Title="Sorting Algorithms Viewer" Height="450" Width="800" Background="White">
+        Title="Sorting Algorithms Viewer" 
+        Height="450" Width="800" Background="White"
+        Icon="Assets/icon.ico">
     <Grid x:Name="RootGrid" Tag="Location">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
@@ -36,39 +38,45 @@
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
 
+                    <!--Execution buttons-->
                     <Button x:Name="BtnGenerate" Content="Generate" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnGenerate_Click" Margin="0,10,0,0"/>
                     <Button x:Name="BtnPlay" Content="Start" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnPlay_Click" Margin="0,5,0,0" IsEnabled="False"/>
                     <Button x:Name="BtnCancel" Content="Cancel" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="96" Click="BtnCancel_Click" Margin="0,5,0,0" IsEnabled="False"/>
 
-                    <Label Content="Numbers to sort: " Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"/>
-                    <TextBox x:Name="InputNums" Text="50" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Height="18" ToolTip="An integer number greater or equal than 2"/>
-
-                    <Label Content="Sort speed: " Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"/>
-                    <DockPanel VerticalAlignment="Center" Grid.Row="1" Grid.Column="1">
-                        <Label Content="{Binding ElementName=SliderSpeed, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center"/>
-                        <Slider x:Name="SliderSpeed" VerticalAlignment="Center" Minimum="0.1" Value="1" Ticks="0.1 0.5 1 2 3 4 5" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Maximum="5" />
-                    </DockPanel>
+                    <!--Input for number of bars-->
+                    <Label Content="Numbers to sort: " Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" ToolTip="An integer number greater or equal than 2 that stands for the number of bars in the graphic."/>
+                    <TextBox x:Name="InputNums" Text="50" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Height="18"/>   
 
                     <!--Color selector-->
-                    <Label Content="Graphic color: " Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right"/>
-                    <ComboBox x:Name="ColorSelector" Grid.Row="2" Grid.Column="1">
+                    <Label Content="Graphic color: " Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" ToolTip="Palette of color used for the graphic."/>
+                    <ComboBox x:Name="ColorSelector" Grid.Row="1" Grid.Column="1">
                         <ComboBoxItem Content="Green" IsSelected="True"></ComboBoxItem>
                         <ComboBoxItem Content="Yellow"></ComboBoxItem>
                         <ComboBoxItem Content="Blue"></ComboBoxItem>
                         <ComboBoxItem Content="B&amp;W"></ComboBoxItem>
                     </ComboBox>
 
-                    <Label Content="Time complexity: " Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic"/>
-                    <Label x:Name="TextTimeComplexity" Content="O(n²)" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic"/>
+                    <!--Information about the selected sorting algorithm-->
+                    <Label Content="Time complexity: " Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic" ToolTip="How many time takes the algorithm to finish. N stands for the number of elements being sorted."/>
+                    <Label x:Name="TextTimeComplexity" Content="O(n²)" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic"/>
 
-                    <Label Content="Space complexity: " Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
-                    <Label x:Name="TextSpaceComplexity" Content="O(1)" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
+                    <Label Content="Space complexity: " Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10" ToolTip="How many space in memory uses the algorithm. N stands for the number of elements being sorted."/>
+                    <Label x:Name="TextSpaceComplexity" Content="O(1)" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
 
-                    <Label Content="Sorting algorithm: " Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Margin="0,20,0,0"/>
-                    <ComboBox x:Name="SelectorSortingAlgorithm" Grid.Row="3" Grid.Column="1" Margin="0,20,0,0" SelectionChanged="SelectorSortingAlgorithm_SelectionChanged">
+                    <!--Sorting algorithm selection-->
+                    <Label Content="Sorting algorithm: " Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Margin="0,20,0,0" ToolTip="Algorithm used in the sorting. Its information is shown below."/>
+                    <ComboBox x:Name="SelectorSortingAlgorithm" Grid.Row="2" Grid.Column="1" Margin="0,20,0,0" SelectionChanged="SelectorSortingAlgorithm_SelectionChanged">
                         <ComboBoxItem IsSelected="True">Bubble sort</ComboBoxItem>
                     </ComboBox>
+                    
+                    <!--Slider for execution speed-->
+                    <Label Content="Sorting speed: " Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" ToolTip="Speed of reproduction of the algorithm. The option 5 is realtime speed."/>
+                    <DockPanel VerticalAlignment="Center" Grid.Row="5" Grid.Column="1">
+                        <Label Content="{Binding ElementName=SliderSpeed, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center"/>
+                        <Slider x:Name="SliderSpeed" VerticalAlignment="Center" Minimum="0.1" Value="1" Ticks="0.1 0.5 1 2 3 4 5" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Maximum="5" />
+                    </DockPanel>
 
+                    <!--Label that shows the total execution time-->
                     <Label x:Name="LabelSortingTime" Grid.Row="8" Grid.ColumnSpan="2" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF393838" FontStyle="Italic"/>
                 </Grid>
             </TabItem>
@@ -86,9 +94,11 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
+                    <!--Checkbox for enable log-->
+                    <Label Content="Enable log: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" ToolTip="Enables the generation of log texts. It could could slow down the program."></Label>
                     <CheckBox x:Name="CheckBoxLog" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Click="CheckBoxLog_Click"></CheckBox>
-                    <Label Content="Enable log: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"></Label>
                     
+                    <!--Log-->
                     <RichTextBox x:Name="TextLog" Grid.Row="2" Grid.ColumnSpan="3" Background="Black" Foreground="White" SelectionBrush="#FF57CCFA" SelectionTextBrush="Black" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" IsReadOnly="True" IsEnabled="False">
                         <RichTextBox.Resources>
                             <Style TargetType="{x:Type Paragraph}">
