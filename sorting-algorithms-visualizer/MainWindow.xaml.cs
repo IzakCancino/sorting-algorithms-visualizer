@@ -27,6 +27,7 @@ namespace sorting_algorithms_visualizer
     {
         public List<RectangleNode> Rectangles;
 
+        private ISortingAlgorithm _selectedSortingAlgorithm;
         private CancellationTokenSource? _cancellationTokenSource;
 
         public Dictionary<string, ColorPalette> ColorPalettes;
@@ -246,23 +247,8 @@ namespace sorting_algorithms_visualizer
             // Create a new CancellationTokenSource for the new sort operation
             _cancellationTokenSource = new CancellationTokenSource();
 
-            // Sorting algorithm selected
-            int selection = SelectorSortingAlgorithm.SelectedIndex;
-            ISortingAlgorithm sortingAlgorithm;
-
-            switch (selection)
-            {
-                case 0:
-                    sortingAlgorithm = new BubbleSort();
-                    break;
-                default:
-                    SelectorSortingAlgorithm.Focus();
-                    Log.PrintError(TextLog, "*** Error: Invalid sorting algorithm selected ***");
-                    return;
-            }
-
             Log.PrintAlert(TextLog, $"Starting sorting process...");
-            Log.Print(TextLog, $"Algorithm: {sortingAlgorithm.Name}");
+            Log.Print(TextLog, $"Algorithm: {_selectedSortingAlgorithm.Name}");
 
             // Calculations of delay based in the speed input
             double speed = SliderSpeed.Value;
@@ -296,7 +282,7 @@ namespace sorting_algorithms_visualizer
             timer.Start();
             try
             {
-                await sortingAlgorithm.Sort(Rectangles, settings, _cancellationTokenSource.Token);
+                await _selectedSortingAlgorithm.Sort(Rectangles, settings, _cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -368,19 +354,21 @@ namespace sorting_algorithms_visualizer
         private void SelectorSortingAlgorithm_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int selection = SelectorSortingAlgorithm.SelectedIndex;
-            ISortingAlgorithm sortingAlgorithm;
 
             switch (selection)
             {
                 case 0:
-                    sortingAlgorithm = new BubbleSort();
+                    _selectedSortingAlgorithm = new BubbleSort();
+                    break;
+                case 1:
+                    _selectedSortingAlgorithm = new SelectionSort();
                     break;
                 default:
                     return;
             }
 
-            TextTimeComplexity.Content = sortingAlgorithm.TimeComplexity;
-            TextSpaceComplexity.Content = sortingAlgorithm.SpaceComplexity;
+            TextTimeComplexity.Content = _selectedSortingAlgorithm.TimeComplexity;
+            TextSpaceComplexity.Content = _selectedSortingAlgorithm.SpaceComplexity;
         }
 
         private void CheckBoxLog_Click(object sender, RoutedEventArgs e)

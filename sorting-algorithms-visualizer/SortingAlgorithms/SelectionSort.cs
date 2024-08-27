@@ -9,14 +9,15 @@ using System.Windows.Media;
 
 namespace sorting_algorithms_visualizer.SortingAlgorithms
 {
-    public class BubbleSort : ISortingAlgorithm
+    public class SelectionSort : ISortingAlgorithm
     {
         public string Name { get; }
         public string TimeComplexity { get; }
         public string SpaceComplexity { get; }
 
-        public BubbleSort() {
-            Name = "Bubble sort";
+        public SelectionSort()
+        {
+            Name = "Selection sort";
             TimeComplexity = "O(n\u00B2)"; // O^2
             SpaceComplexity = "O(1)";
         }
@@ -30,40 +31,41 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
 
             int longDelay = shortDelay * 2;
             int length = list.Count;
-            int steps = 0;
 
             // Bubble sort process
             for (int i = 0; i < length - 1; i++)
             {
-                for (int j = 0; j < length - i - 1; j++)
+                int min = i;
+
+                for (int j = i + 1; j < length; j++)
                 {
                     // Check if cancellation is requested
                     cancellationToken.ThrowIfCancellationRequested();
 
                     await list[j].BlinkRectangle(contrastColor, shortDelay);
 
-                    // Flip values
-                    if (list[j].Value > list[j + 1].Value)
+                    if (list[j].Value < list[min].Value)
                     {
-                        (list[j], list[j + 1]) = (list[j + 1], list[j]);
-                        list[j].FlipRectangles(list[j + 1]);
-                        steps++;
+                        min = j;
                     }
                 }
 
                 // Check if cancellation is requested
                 cancellationToken.ThrowIfCancellationRequested();
 
+                // Flip values
+                (list[i], list[min]) = (list[min], list[i]);
+                list[i].FlipRectangles(list[min]);
+
                 // Value completly sorted
-                await list[length - i - 1].BlinkRectangle(contrastColor, longDelay);
-                Log.Print(log, $" + Value {length - i} sorted ({steps} steps)");
-                steps = 0;
+                await list[i].BlinkRectangle(contrastColor, longDelay);
+                Log.Print(log, $" + Value {i + 1} sorted");
                 await Task.Delay(shortDelay, cancellationToken);
             }
 
             // Last value completly sorted
-            Log.Print(log, $" + Value 1 sorted ({steps} steps)");
-            await list[0].BlinkRectangle(contrastColor, longDelay);
+            Log.Print(log, $" + Value {length} sorted");
+            await list[^1].BlinkRectangle(contrastColor, longDelay);
         }
     }
 }
