@@ -25,40 +25,54 @@ namespace sorting_algorithms_visualizer
     /// </summary>
     public partial class MainWindow : Window
     {
-        public List<RectangleNode> Rectangles;
+        private List<RectangleNode> _rectangles = [];
+        private ColorPalette _actualColorPalette;
 
-        private ISortingAlgorithm _selectedSortingAlgorithm;
+        private ISortingAlgorithm _selectedSortingAlgorithm = new BubbleSort();
         private CancellationTokenSource? _cancellationTokenSource;
 
-        public Dictionary<string, ColorPalette> ColorPalettes;
-        public ColorPalette ActualColorPalette;
+
 
         /// <summary>
         /// Structure that storages all the settings, objects and values necessary to execute a sort algorithm.
         /// </summary>
         public struct SettingsSort
         {
-            public RichTextBox Log { get; set; }
-            public int Delay { get; set; }
-            public Brush ContrastColor { get; set; }
+            public RichTextBox Log { get; }
+            public int Delay { get; }
+            public Brush ContrastColor { get; }
+
+            public SettingsSort(RichTextBox log, int delay, Brush contrastColor)
+            {
+                Log = log;
+                Delay = delay;
+                ContrastColor = contrastColor;
+            }
         }
 
         /// <summary>
-        /// Structure with the mask (to create the color) or contrast color used in the rectangles 
+        /// Structure with the mask (to create the color) or contrast color used in the rectangles.
         /// </summary>
         public struct ColorPalette
         {
-            public int[] MainMask { get; set; }
-            public Brush ContrastColor { get; set; }
+            public int[] MainMask { get; }
+            public Brush ContrastColor { get; }
+
+            public ColorPalette(int[] mainMask, Brush contrastColor)
+            {
+                MainMask = mainMask;
+                ContrastColor = contrastColor;
+            }
         }
 
 
+
         /// <summary>
-        /// Suffles the rectangle nodes list
+        /// Suffles the rectangle nodes list.
         /// </summary>
-        /// <param name="list">A list of rectangle nodes in any order</param>
-        /// <returns>A list of rectangle nodes in a completly random order</returns>
-        public static List<RectangleNode> ShuffleRectangleNodes(List<RectangleNode> list)
+        /// <param name="list">A list of rectangle nodes in any order.</param>
+        /// <returns>A list of rectangle nodes in a completly random order.</returns>
+        private static List<RectangleNode> ShuffleRectangleNodes(List<RectangleNode> list)
         { 
             Random r = new Random();
             int n = list.Count;
@@ -72,52 +86,70 @@ namespace sorting_algorithms_visualizer
             return list;
         }
 
+        /// <summary>
+        /// It gets the color palette selected by the user to use in the graph.
+        /// </summary>
+        /// <param name="selection">The index of the user's selection.</param>
+        /// <returns>The color palette selected.</returns>
+        private static ColorPalette GetSelectedColorPalette(int selection)
+        {
+            return selection switch
+            {
+                // Green
+                0 => new ColorPalette(
+                        mainMask: [0, 1, 0],
+                        contrastColor: new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
+                    ),
+                // Yellow
+                1 => new ColorPalette(
+                        mainMask: [1, 1, 0],
+                        contrastColor: new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 230))
+                    ),
+                // Blue
+                2 => new ColorPalette(
+                        mainMask: [0, 1, 1],
+                        contrastColor: new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 85, 0))
+                    ),
+                // B&W
+                3 => new ColorPalette(
+                        mainMask: [1, 1, 1],
+                        contrastColor: new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
+                    ),
+                // Default: Green
+                _ => new ColorPalette(
+                        mainMask: [0, 1, 0],
+                        contrastColor: new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
+                    ),
+            };
+        }
+
+        /// <summary>
+        /// It gets the sorting algorithm selected by the user to execute in the graph.
+        /// </summary>
+        /// <param name="selection">The index of the user's selection.</param>
+        /// <returns>A new object of the class based in the algorithm selected.</returns>
+        private static ISortingAlgorithm GetSelectedSortingAlgorithm(int selection)
+        {
+            return selection switch
+            {
+                0 => new BubbleSort(),
+                1 => new SelectionSort(),
+                _ => new BubbleSort(),
+            };
+        }
+
+
+
+        /// <summary>
+        /// Window initiatilization.
+        /// </summary>
         public MainWindow()
         {
-            Rectangles = new List<RectangleNode>();
-
-            // Filling the dictionary of color palettes with all the options of colors to use in the graph
-            ColorPalettes = new Dictionary<string, ColorPalette>
-            {
-                {
-                    "Green",
-                    new ColorPalette()
-                    {
-                        MainMask = [0, 1, 0],
-                        ContrastColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
-                    }
-                },
-                {
-                    "Yellow",
-                    new ColorPalette()
-                    {
-                        MainMask = [1, 1, 0],
-                        ContrastColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 230))
-                    }
-                },
-                {
-                    "Blue",
-                    new ColorPalette()
-                    {
-                        MainMask = [0, 1, 1],
-                        ContrastColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 85, 0))
-                    }
-                },
-                {
-                    "B&W",
-                    new ColorPalette()
-                    {
-                        MainMask = [1, 1, 1],
-                        ContrastColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
-                    }
-                }
-            };
-
             InitializeComponent();
         }
 
         /// <summary>
-        /// Starts the scramble process, by generating the determined number of rectagles in a random order
+        /// Starts the scramble process, by generating the determined number of rectagles in a random order.
         /// </summary>
         private void BtnGenerate_Click(object sender, RoutedEventArgs e)
         {
@@ -151,7 +183,7 @@ namespace sorting_algorithms_visualizer
 
             // Variables used
             int amountOfValues = Convert.ToInt32(InputNums.Text);
-            Rectangles = new List<RectangleNode>();
+            _rectangles = new List<RectangleNode>();
 
             // Absolute dimensions of the canva
             double totalWidth = CanvasGraph.ActualWidth;
@@ -179,11 +211,7 @@ namespace sorting_algorithms_visualizer
             int countOfBarSections = 1;
             int scaleColor = (int)Math.Floor(255 / Math.Ceiling((double)amountOfValues / barSections));
             
-            ActualColorPalette = ColorPalettes[
-                ((ComboBoxItem)ColorSelector.SelectedItem)
-                .Content.ToString() 
-                ?? "Green"
-            ];
+            _actualColorPalette = GetSelectedColorPalette(ColorSelector.SelectedIndex);
 
             // Populate the canva with rectangles
             for (int i = 0; i < amountOfValues; i++)
@@ -203,9 +231,9 @@ namespace sorting_algorithms_visualizer
                 int amountOfColor = scaleColor * countOfBarSections;
 
                 mySolidColorBrush.Color = System.Windows.Media.Color.FromRgb(
-                    (byte)(amountOfColor * ActualColorPalette.MainMask[0]),    
-                    (byte)(amountOfColor * ActualColorPalette.MainMask[1]),    
-                    (byte)(amountOfColor * ActualColorPalette.MainMask[2])
+                    (byte)(amountOfColor * _actualColorPalette.MainMask[0]),    
+                    (byte)(amountOfColor * _actualColorPalette.MainMask[1]),    
+                    (byte)(amountOfColor * _actualColorPalette.MainMask[2])
                 );
 
                 // Rectangle creation and settings
@@ -221,13 +249,13 @@ namespace sorting_algorithms_visualizer
                 Canvas.SetBottom(rectangle, heightMargin * 2);
                 Canvas.SetLeft(rectangle, (widthMargin * 2) + (widthOfEachRectangle * i * 2));
 
-                Rectangles.Add(new RectangleNode(rectangle, i));
+                _rectangles.Add(new RectangleNode(rectangle, i));
             }
 
             Log.PrintSuccess(TextLog, $"Population process finished. {amountOfValues} values added.");
 
             // Shuffle list of nodes
-            Rectangles = ShuffleRectangleNodes(Rectangles);
+            _rectangles = ShuffleRectangleNodes(_rectangles);
         }
 
         /// <summary>
@@ -270,19 +298,18 @@ namespace sorting_algorithms_visualizer
             }
 
             // Settings structure used in the sorting
-            SettingsSort settings = new SettingsSort()
-            {
-                Log = TextLog,
-                Delay = delay,
-                ContrastColor = ActualColorPalette.ContrastColor
-            };
+            SettingsSort settings = new SettingsSort(
+                log: TextLog,
+                delay: delay,
+                contrastColor: _actualColorPalette.ContrastColor
+            );
 
             // Sort execution
             var timer = new Stopwatch();
             timer.Start();
             try
             {
-                await _selectedSortingAlgorithm.Sort(Rectangles, settings, _cancellationTokenSource.Token);
+                await _selectedSortingAlgorithm.Sort(_rectangles, settings, _cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -331,7 +358,7 @@ namespace sorting_algorithms_visualizer
         }
 
         /// <summary>
-        /// Stops the asynchronous execution of the function <c>BtnPlay_Click()</c>
+        /// Stops the asynchronous execution of the function <c>BtnPlay_Click()</c>.
         /// </summary>
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -349,31 +376,22 @@ namespace sorting_algorithms_visualizer
         }
 
         /// <summary>
-        /// Changes the information about the selected algorithm
+        /// Changes the information about the selected algorithm.
         /// </summary>
         private void SelectorSortingAlgorithm_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int selection = SelectorSortingAlgorithm.SelectedIndex;
-
-            switch (selection)
-            {
-                case 0:
-                    _selectedSortingAlgorithm = new BubbleSort();
-                    break;
-                case 1:
-                    _selectedSortingAlgorithm = new SelectionSort();
-                    break;
-                default:
-                    return;
-            }
+            _selectedSortingAlgorithm = GetSelectedSortingAlgorithm(SelectorSortingAlgorithm.SelectedIndex);
 
             TextTimeComplexity.Content = _selectedSortingAlgorithm.TimeComplexity;
             TextSpaceComplexity.Content = _selectedSortingAlgorithm.SpaceComplexity;
         }
 
+        /// <summary>
+        /// Used when attempted to enable or disable the log.
+        /// </summary>
         private void CheckBoxLog_Click(object sender, RoutedEventArgs e)
         {
-            // Enbling the log
+            // Enabling the log
             if (CheckBoxLog.IsChecked ?? false)
             {
                 var result = MessageBox.Show("Having the log execution enabled could slow down the program, and it could add extra time to the sorting timer.\nDo you want to continue?", "Log Alert", MessageBoxButton.YesNo, MessageBoxImage.Warning);
@@ -398,12 +416,18 @@ namespace sorting_algorithms_visualizer
             Log.IsEnabled = false;
         }
 
+        /// <summary>
+        /// Resets the grid width size.
+        /// </summary>
         private void GridSplitterPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Move the splitter to its default location
             RootGrid.ColumnDefinitions[0].Width = new GridLength(300);
         }
 
+        /// <summary>
+        /// Updates the tag about the location of the grid splitter.
+        /// </summary>
         private void GridSplitterPanel_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             // Save in a tag the horizontal location of the splitter
