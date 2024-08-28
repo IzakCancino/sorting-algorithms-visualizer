@@ -32,7 +32,7 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
             int longDelay = shortDelay * 2;
             int length = list.Count;
 
-            // Bubble sort process
+            // Selection sort process
             for (int i = 0; i < length - 1; i++)
             {
                 int min = i;
