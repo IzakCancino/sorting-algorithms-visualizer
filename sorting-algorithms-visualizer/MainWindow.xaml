@@ -60,8 +60,8 @@
                     <Label Content="Time complexity: " Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic" ToolTip="How many time takes the algorithm to finish. N stands for the number of elements being sorted."/>
                     <Label x:Name="TextTimeComplexity" Content="O(n²)" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic"/>
 
-                    <Label Content="Space complexity: " Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10" ToolTip="How many space in memory uses the algorithm. N stands for the number of elements being sorted."/>
-                    <Label x:Name="TextSpaceComplexity" Content="O(1)" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
+                    <Label Content="Auxiliary space: " Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10" ToolTip="How many space in memory uses the algorithm as auxiliar. N stands for the number of elements being sorted."/>
+                    <Label x:Name="TextAuxiliarySpace" Content="O(1)" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"  Foreground="#FF393838" FontStyle="Italic" Margin="0,0,0,10"/>
 
                     <!--Sorting algorithm selection-->
                     <Label Content="Sorting algorithm: " Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Margin="0,20,0,0" ToolTip="Algorithm used in the sorting. Its information is shown below."/>

@@ -383,7 +383,7 @@ namespace sorting_algorithms_visualizer
             _selectedSortingAlgorithm = GetSelectedSortingAlgorithm(SelectorSortingAlgorithm.SelectedIndex);
 
             TextTimeComplexity.Content = _selectedSortingAlgorithm.TimeComplexity;
-            TextSpaceComplexity.Content = _selectedSortingAlgorithm.SpaceComplexity;
+            TextAuxiliarySpace.Content = _selectedSortingAlgorithm.AuxiliarySpace;
         }
 
         /// <summary>

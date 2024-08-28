@@ -13,12 +13,12 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
     {
         public string Name { get; }
         public string TimeComplexity { get; }
-        public string SpaceComplexity { get; }
+        public string AuxiliarySpace { get; }
 
         public BubbleSort() {
             Name = "Bubble sort";
             TimeComplexity = "O(n\u00B2)"; // O^2
-            SpaceComplexity = "O(1)";
+            AuxiliarySpace = "O(1)";
         }
 
         public async Task Sort(List<RectangleNode> list, MainWindow.SettingsSort settings, CancellationToken cancellationToken)

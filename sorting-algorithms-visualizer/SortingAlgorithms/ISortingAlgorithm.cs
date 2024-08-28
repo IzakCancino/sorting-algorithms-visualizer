@@ -11,7 +11,7 @@ namespace sorting_algorithms_visualizer.SortingAlgorithms
     {
         public string Name { get; }
         public string TimeComplexity { get; }
-        public string SpaceComplexity { get; }
+        public string AuxiliarySpace { get; }
 
         /// <summary>
         /// Sort a specific list of <c>RectangleNode</c> type.
