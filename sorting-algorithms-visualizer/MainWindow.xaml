@@ -68,6 +68,8 @@
                     <ComboBox x:Name="SelectorSortingAlgorithm" Grid.Row="2" Grid.Column="1" Margin="0,20,0,0" SelectionChanged="SelectorSortingAlgorithm_SelectionChanged">
                         <ComboBoxItem IsSelected="True">Bubble sort</ComboBoxItem>
                         <ComboBoxItem>Selection sort</ComboBoxItem>
+                        <ComboBoxItem>Insertion sort</ComboBoxItem>
+                        <ComboBoxItem>Merge sort</ComboBoxItem>
                     </ComboBox>
                     
                     <!--Slider for execution speed-->

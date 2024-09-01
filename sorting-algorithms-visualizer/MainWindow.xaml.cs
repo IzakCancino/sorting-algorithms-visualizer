@@ -41,12 +41,16 @@ namespace sorting_algorithms_visualizer
             public RichTextBox Log { get; }
             public int Delay { get; }
             public Brush ContrastColor { get; }
+            public double YFirstBar { get; }
+            public double YDifferenceBar { get; }
 
-            public SettingsSort(RichTextBox log, int delay, Brush contrastColor)
+            public SettingsSort(RichTextBox log, int delay, Brush contrastColor, double yFirstBar, double yDifferenceBar)
             {
                 Log = log;
                 Delay = delay;
                 ContrastColor = contrastColor;
+                YFirstBar = yFirstBar;
+                YDifferenceBar = yDifferenceBar;
             }
         }
 
@@ -134,6 +138,8 @@ namespace sorting_algorithms_visualizer
             {
                 0 => new BubbleSort(),
                 1 => new SelectionSort(),
+                2 => new InsertionSort(),
+                3 => new MergeSort(),
                 _ => new BubbleSort(),
             };
         }
@@ -301,7 +307,9 @@ namespace sorting_algorithms_visualizer
             SettingsSort settings = new SettingsSort(
                 log: TextLog,
                 delay: delay,
-                contrastColor: _actualColorPalette.ContrastColor
+                contrastColor: _actualColorPalette.ContrastColor,
+                yFirstBar: Canvas.GetLeft(_rectangles[0].Rectangle),
+                yDifferenceBar: Canvas.GetLeft(_rectangles[1].Rectangle) - Canvas.GetLeft(_rectangles[0].Rectangle)
             );
 
             // Sort execution
